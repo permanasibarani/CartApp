@@ -1,5 +1,16 @@
 # Cart App
 
+## Table of Contents
+1. **Cart App**
+   - 1.1. [Tampilan Aplikasi](#tampilan-aplikasi)
+   - 1.2. [Technology Stack](#technology-stack)
+   - 1.3. [Database Scheme](#database-scheme)
+
+2. **API Documentation**
+   - 2.1. [User API](#user-api)
+   - 2.2. [Product API](#product-api)
+   - 2.3. [Cart API](#cart-api)
+
 ## Tampilan Aplikasi
 ### Halaman Awal
 ![image](https://github.com/user-attachments/assets/1854f031-965c-46a9-8c2d-4125a3d1045f)
