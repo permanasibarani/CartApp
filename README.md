@@ -42,7 +42,7 @@
 - **PostgreSQL**: Sistem database objek-relasional sumber terbuka yang digunakan untuk menyimpan dan mengelola data.
 ---
 ## Database Scheme
-![image](https://github.com/user-attachments/assets/b2a361df-1de7-4ac9-b4e2-a74876a8684e)
+![image](https://github.com/user-attachments/assets/56ad9f16-dbaf-4812-b746-a6dc005d787b)
 
 ---
 
