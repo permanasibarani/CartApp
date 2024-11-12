@@ -53,7 +53,7 @@ function AddProduct({ token, username, products }: AddProductProps) {
   // Handle selection of a product from suggestions
   const handleProductSelect = (product: Product) => {
     setSelectedProduct(product);
-    setQuantity(1); // Default quantity
+    setQuantity(0); // Default quantity
     setTotalPrice(product.price);
   };
 
@@ -149,7 +149,7 @@ function AddProduct({ token, username, products }: AddProductProps) {
                 id="quantity"
                 value={quantity}
                 onChange={handleQuantityChange}
-                min="1"
+                min="0"
                 max={selectedProduct?.stock || 0}
               />
             </div>
@@ -168,7 +168,9 @@ function AddProduct({ token, username, products }: AddProductProps) {
         <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
           Total Harga: {totalPrice} IDR
         </h3>
-        <Button onClick={handleAddProduct}>Add Product</Button>
+        <Button disabled={quantity === 0} onClick={handleAddProduct}>
+          Add Product
+        </Button>
       </CardFooter>
     </Card>
   );

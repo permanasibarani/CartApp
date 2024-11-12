@@ -46,12 +46,10 @@ export const AutoComplete = ({
         return;
       }
 
-      // Keep the options displayed when the user is typing
       if (!isOpen) {
         setOpen(true);
       }
 
-      // This is not a default behaviour of the <input /> field
       if (event.key === "Enter" && input.value !== "") {
         const optionToSelect = options.find(
           (option) => option.label === input.value
@@ -81,8 +79,6 @@ export const AutoComplete = ({
       setSelected(selectedOption);
       onValueChange?.(selectedOption);
 
-      // This is a hack to prevent the input from being focused after the user selects an option
-      // We can call this hack: "The next tick"
       setTimeout(() => {
         inputRef?.current?.blur();
       }, 0);
@@ -111,7 +107,12 @@ export const AutoComplete = ({
             isOpen ? "block" : "hidden"
           )}
         >
-          <CommandList className="rounded-lg ring-1 ring-slate-200">
+          <CommandList
+            className={cn(
+              "rounded-lg ring-1 ring-slate-200",
+              "max-h-40 overflow-y-auto"
+            )}
+          >
             {isLoading ? (
               <CommandPrimitive.Loading>
                 <div className="p-1">

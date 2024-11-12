@@ -7,6 +7,7 @@ import Navigation from "./components/Navigation";
 import ProductFormDummy from "./components/ProductFormDummy";
 import AddProductDummy from "./components/AddProductDummy";
 import DataTableDummy from "./components/DataTableDummy";
+import { DataTableOrder } from "./components/DataTableOrder";
 
 function App() {
   const [user, setUser] = useState<{
@@ -46,7 +47,10 @@ function App() {
 
       fetchProducts();
     }
-  }, [user]); // Depend on user to refetch when token is updated
+  }, [user]);
+  const onProductAdded = (newProduct) => {
+    setProducts((prevProducts) => [...prevProducts, newProduct]);
+  };
   return (
     <>
       <Navigation user={user} setUser={setUser} />
@@ -65,6 +69,7 @@ function App() {
               token={user.token}
               products={products}
               username={user.username}
+              onProductAdded={onProductAdded}
             />
           ) : (
             <AddProductDummy />
@@ -75,10 +80,16 @@ function App() {
         <div className="mb-20 mt-10">
           {/* Render AddProduct even if user is null, but provide a fallback UI */}
           {user ? (
-            <DataTableDemo username={user.username} />
+            <DataTableDemo username={user.username} products={products} />
           ) : (
             <DataTableDummy />
           )}
+        </div>
+      </div>
+      <div>
+        <div className="mb-20 mt-10">
+          {/* Render AddProduct even if user is null, but provide a fallback UI */}
+          {user ? <DataTableOrder username={user.username} /> : null}
         </div>
       </div>
     </>

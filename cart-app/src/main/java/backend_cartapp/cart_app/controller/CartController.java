@@ -5,6 +5,7 @@ import backend_cartapp.cart_app.model.*;
 import backend_cartapp.cart_app.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,10 +32,8 @@ public class CartController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public WebResponse<List<CartResponseDTO>> getAllProducts(@RequestParam String username,  @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        // Ambil cart data berdasarkan username dengan pagination
         Page<CartResponseDTO> carts = cartService.getCartsByUsername(username, page, size);
 
-        // Kembalikan response dengan data cart
         return WebResponse.<List<CartResponseDTO>>builder()
                 .data(carts.getContent())
                 .build();
@@ -42,12 +41,16 @@ public class CartController {
 
     @PostMapping("api/v1/cart/checkout")
     public WebResponse<String> checkout(@RequestBody CheckoutRequest request) {
-        // Panggil service checkout untuk memproses
         cartService.checkout(request);
 
-        // Mengembalikan response sukses
         return WebResponse.<String>builder()
                 .data("Checkout successful")
                 .build();
+    }
+
+    @DeleteMapping("/api/v1/cart/{cartId}/{username}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCart(@PathVariable Long cartId, @PathVariable String username) {
+        cartService.deleteCart(cartId, username);
     }
 }

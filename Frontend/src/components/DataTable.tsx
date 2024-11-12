@@ -52,7 +52,7 @@ interface DataTableDemoProps {
 
 export function DataTableDemo({ username }: DataTableDemoProps) {
   const [cartData, setCartData] = React.useState<Payment[]>([]); // State to hold fetched cart data
-  const [page, setPage] = React.useState(0); // Page currently displayed
+  const [page, setPage] = React.useState<number>(0);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -68,7 +68,6 @@ export function DataTableDemo({ username }: DataTableDemoProps) {
   // Handle selection change to update selected items
   React.useEffect(() => {
     if (table) {
-      // Ensure table is defined before accessing it
       const selected = table
         .getRowModel()
         .rows.filter((row) => row.getIsSelected())
@@ -78,8 +77,9 @@ export function DataTableDemo({ username }: DataTableDemoProps) {
         }));
       setSelectedItems(selected);
     }
-  }, [table]); // Only depend on `table`, not `table.getRowModel().rows`
-  // Handle order creation
+  }, [table, rowSelection]);
+
+  console.log(rowSelection);
   const handleCreateOrder = async () => {
     const orderData = {
       username,
@@ -100,6 +100,12 @@ export function DataTableDemo({ username }: DataTableDemoProps) {
 
       const result = await response.json();
       if (response.ok) {
+        setCartData((prevData) =>
+          prevData.filter(
+            (item) =>
+              !selectedItems.some((selected) => selected.name === item.name)
+          )
+        );
         alert("Order created successfully!");
       } else {
         alert("Error creating order: " + result.message);
@@ -111,9 +117,10 @@ export function DataTableDemo({ username }: DataTableDemoProps) {
   };
   // Fetch cart data based on username
   const fetchCartData = async (page: number) => {
+    const validPage = Number.isNaN(Number(page)) ? 0 : page;
     try {
       const response = await fetch(
-        `http://localhost:8080/api/v1/cart/all?username=${username}&page=${page}&size=${3}`
+        `http://localhost:8080/api/v1/cart/all?username=${username}&page=${validPage}&size=${3}`
       );
       const result = await response.json();
       setCartData(result.data); // Update table data
@@ -121,6 +128,7 @@ export function DataTableDemo({ username }: DataTableDemoProps) {
       console.error("Error fetching data:", error);
     }
   };
+  console.log(page);
 
   // Fetch data when page changes
   React.useEffect(() => {
@@ -131,6 +139,34 @@ export function DataTableDemo({ username }: DataTableDemoProps) {
   const handleNextPage = () => setPage((prevPage) => prevPage + 1);
   const handlePreviousPage = () =>
     setPage((prevPage) => Math.max(prevPage - 1, 0));
+
+  const handleDeleteCart = async (cartId: number) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/v1/cart/${cartId}/${username}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Setelah penghapusan berhasil, hapus item dari state cartData
+        setCartData(
+          (prevData) => prevData.filter((item) => item.cart_id !== cartId) // Menghapus item dari state cartData
+        );
+        alert("Cart deleted successfully!");
+      } else {
+        const result = await response.json();
+        alert("Error deleting cart: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error deleting cart:", error);
+      alert("Failed to delete cart");
+    }
+  };
 
   // Columns for table
   const columns: ColumnDef<Payment>[] = [
@@ -231,7 +267,11 @@ export function DataTableDemo({ username }: DataTableDemoProps) {
                 Copy cart ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>View product details</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleDeleteCart(payment.cart_id)}
+              >
+                Delete Cart
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );

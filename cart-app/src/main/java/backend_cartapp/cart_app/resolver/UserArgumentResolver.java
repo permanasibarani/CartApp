@@ -44,11 +44,9 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         }
 
         String requestURI = servletRequest.getRequestURI();
-        if ("/api/v1/product".equals(requestURI) && user.getRole() == 0) {  // 0 adalah role admin
-            // Jika role admin, lanjutkan
+        if ("/api/v1/product".equals(requestURI) && user.getRole() == 0) {
             log.info("Admin role verified, proceeding with product creation.");
         } else if ("/api/v1/product".equals(requestURI)) {
-            // Jika bukan admin, larang akses
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only admin can create products.");
         }
 
