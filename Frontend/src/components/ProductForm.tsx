@@ -111,7 +111,8 @@ function ProductForm({ token, setProducts }: ProductFormProps) {
                   <SelectItem value="Laptop">Laptop</SelectItem>
                   <SelectItem value="Book">Book</SelectItem>
                   <SelectItem value="Alat Musik">Alat Musik</SelectItem>
-                  <SelectItem value="Stationery">Stationery</SelectItem>
+                  <SelectItem value="Obat-obatan">Drugs</SelectItem>
+                  <SelectItem value="Lain-lain">Lain-lain</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -132,7 +133,8 @@ function ProductForm({ token, setProducts }: ProductFormProps) {
                 id="price"
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
-                min="0"
+                defaultValue={1}
+                min="1"
               />
             </div>
           </div>

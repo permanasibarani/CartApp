@@ -8,6 +8,7 @@ import ProductFormDummy from "./components/ProductFormDummy";
 import AddProductDummy from "./components/AddProductDummy";
 import DataTableDummy from "./components/DataTableDummy";
 import { DataTableOrder } from "./components/DataTableOrder";
+import { Separator } from "@/components/ui/separator";
 
 function App() {
   const [user, setUser] = useState<{
@@ -77,7 +78,7 @@ function App() {
         </div>
       </div>
       <div>
-        <div className="mb-20 mt-10">
+        <div className="mb-5 mt-10">
           {/* Render AddProduct even if user is null, but provide a fallback UI */}
           {user ? (
             <DataTableDemo username={user.username} products={products} />
@@ -86,8 +87,9 @@ function App() {
           )}
         </div>
       </div>
+      <Separator />
       <div>
-        <div className="mb-20 mt-10">
+        <div className="mb-20 mt-5">
           {/* Render AddProduct even if user is null, but provide a fallback UI */}
           {user ? <DataTableOrder username={user.username} /> : null}
         </div>

@@ -24,18 +24,16 @@ public class ProductService {
     public ProductResponse create(User user, CreateProductRequest request) {
         validationService.validate(request);
 
-        // Cek apakah produk dengan nama yang sama sudah ada
         Optional<Product> existingProduct = productRepository.findByNameIgnoreCase(request.getName());
 
         Product product;
 
         if (existingProduct.isPresent()) {
-            // Jika produk sudah ada, ambil produk yang ada dan perbarui stock dan price
             product = existingProduct.get();
             product.setStock(request.getStock() != null ? request.getStock() : 0);
             product.setPrice(request.getPrice() != null ? request.getPrice() : 0);
+            product.setSku(request.getSku());
 
-            // Simpan perubahan
             product = productRepository.save(product);
         } else {
             // Jika produk belum ada, buat produk baru
@@ -64,6 +62,7 @@ public class ProductService {
     public List<ProductResponse> getAllProducts(User user) {
         List<Product> products = productRepository.findAll();
         return products.stream()
+                .filter(product -> product.getStock() > 1)
                 .map(product -> new ProductResponse(
                         product.getProductId(),
                         product.getName(),
